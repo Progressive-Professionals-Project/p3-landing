@@ -1,29 +1,60 @@
 <section class="wrap">
   <h2>Privacy Policy</h2>
   <p>
-    We collect information you provide via our forms to facilitate volunteer
-    matching and campaign support. We do not sell your data. We use common
-    cloud services to store and process submissions.
+    We respect your privacy. This policy explains what we collect, why, and how
+    you can control your information. We favor minimal collection and clear
+    choices.
   </p>
+
   <h3>What we collect</h3>
   <ul>
-    <li>Contact information and professional details from volunteers.</li>
-    <li>Campaign contact information and needs descriptions.</li>
+    <li>Information you submit in forms (name, email, details about needs/skills).</li>
+    <li>Basic technical logs for site reliability (e.g., error logs).</li>
   </ul>
+
   <h3>How we use it</h3>
   <ul>
-    <li>To match volunteers to campaign requests.</li>
-    <li>To contact you regarding opportunities or requests.</li>
+    <li>To match volunteers with campaign requests and facilitate introductions.</li>
+    <li>To contact you about your submission.</li>
+    <li>To improve the site’s reliability and security.</li>
   </ul>
+
+  <h3>What we don’t do</h3>
+  <ul>
+    <li>We do not sell your data.</li>
+    <li>We do not share your data with third parties for advertising.</li>
+  </ul>
+
+  <h3>Retention</h3>
+  <p>
+    We keep submitted information only as long as needed to coordinate volunteer
+    introductions and operate our program. You can request deletion at any time.
+  </p>
+
   <h3>Your choices</h3>
   <ul>
-    <li>Request deletion or updates via email.</li>
+    <li>Request access, updates, or deletion by emailing us.</li>
+    <li>Opt out of further contact at any time.</li>
   </ul>
+
+  <h3>Security</h3>
   <p>
-    Contact us at
+    We use reputable hosted services to store submissions. While no system is
+    perfectly secure, we take reasonable steps to protect your data.
+  </p>
+
+  <h3>Changes</h3>
+  <p>
+    We may update this policy to improve clarity. If we make material changes,
+    we will update this page.
+  </p>
+
+  <h3>Contact</h3>
+  <p>
+    Email
     <a href="mailto:progressiveprofessionalsproject@gmail.com"
       >progressiveprofessionalsproject@gmail.com</a
-    >.
+    > with privacy questions or requests.
   </p>
 </section>
 
@@ -34,7 +65,7 @@
     padding: 0 20px;
   }
   h2 {
-    color: #0a3d62;
+    color: var(--color-primary);
   }
 </style>
 

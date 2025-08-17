@@ -36,7 +36,7 @@ jobs:
       - name: Compute BASE_PATH
         id: compute-base
         run: |
-          if [ -f images/CNAME ]; then
+          if [ -f static/CNAME ]; then
             echo "Detected CNAME, using root base path"
             echo "BASE_PATH=" >> $GITHUB_ENV
           else
