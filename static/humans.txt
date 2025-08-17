@@ -1,0 +1,11 @@
+/* TEAM */
+Organization: Progressive Professionals Project
+Location: Chicago, IL (supporting campaigns nationwide)
+Contact: info@progressiveprofessionalsproject.org
+
+/* SITE */
+Standards: HTML5, CSS, JS
+Generator: SvelteKit
+Build: GitHub Pages
+
+
