@@ -15,6 +15,7 @@
   let needs = $state([]);
   let details = $state("");
   let status = $state("idle");
+  let filter = $state("");
   const EMAIL_RE = /^(?:[A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]+)*)@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z]{2,}$/;
   const emailValid = $derived(EMAIL_RE.test(email.trim()));
 
@@ -86,18 +87,18 @@
 
   <fieldset class="group">
     <legend>What do you need help with?</legend>
-    <input class="search" type="search" placeholder="Search areas (typing filters options)" on:input={(e) => filter = e.currentTarget.value.toLowerCase()} />
-    {#key needs.length}
-      <div class="chips">
-        {#each SKILL_OPTIONS.filter(s => !filter || s.toLowerCase().includes(filter)) as s}
-          <button type="button" role="checkbox" aria-checked={needs.includes(s)} class:active={needs.includes(s)} on:click={() => toggleNeed(s)}>{s}</button>
+    <input class="search" type="search" placeholder="Search areas" on:input={(e) => filter = e.currentTarget.value.toLowerCase()} />
+    {#if filter && SKILL_OPTIONS.filter(s => s.toLowerCase().includes(filter) && !needs.includes(s)).length}
+      <div class="results">
+        {#each SKILL_OPTIONS.filter(s => s.toLowerCase().includes(filter) && !needs.includes(s)) as s}
+          <button type="button" class="result" on:click={() => { needs = [...needs, s]; filter = ""; }}>{s}</button>
         {/each}
       </div>
-    {/key}
+    {/if}
     {#if needs.length}
       <div class="bubbles">
         {#each needs as s}
-          <span class="bubble">{s}</span>
+          <button type="button" class="bubble" aria-label={`Remove ${s}`} on:click={() => needs = needs.filter(x => x !== s)}>{s} ×</button>
         {/each}
       </div>
     {/if}
@@ -128,11 +129,11 @@
   fieldset.group { border: none; padding: 0; margin: 2px 0 0; }
   fieldset.group > legend { font-weight: 600; color: var(--color-primary); margin-bottom: 6px; }
   .search { margin-bottom: 8px; }
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chips > button { border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text); padding: 6px 10px; border-radius: 999px; cursor: pointer; }
-  .chips > button.active { background: var(--color-primary); color: var(--color-primary-contrast); border-color: var(--color-primary); }
+  .results { display: grid; gap: 6px; max-height: 180px; overflow: auto; border: 1px solid var(--color-border); border-radius: 8px; padding: 6px; background: var(--color-surface); }
+  .result { text-align: left; border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text); padding: 6px 10px; border-radius: 8px; cursor: pointer; }
+  .result:hover { border-color: var(--color-primary); }
   .bubbles { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .bubble { background: color-mix(in oklab, var(--color-primary), white 80%); color: var(--color-text); padding: 4px 10px; border-radius: 999px; font-size: 12px; }
+  .bubble { background: color-mix(in oklab, var(--color-primary), white 80%); color: var(--color-text); padding: 4px 10px; border-radius: 999px; font-size: 12px; border: 1px solid var(--color-border); cursor: pointer; }
   .actions { display: flex; justify-content: flex-end; padding-top: 6px; }
   .btn { background: var(--color-primary); color: var(--color-primary-contrast); padding: 10px 14px; border-radius: 10px; font-weight: 600; border: none; }
   .ok { color: #157347; }
