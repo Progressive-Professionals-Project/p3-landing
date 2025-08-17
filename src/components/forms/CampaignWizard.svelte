@@ -12,10 +12,13 @@
   let endorsements = $state("");
   let budget = $state("");
   let website = $state("");
+  let phone = $state("");
   let needs = $state([]);
   let details = $state("");
   let status = $state("idle");
   let filter = $state("");
+  let needsOpen = $state(false);
+  const sortedSkills = $derived([...SKILL_OPTIONS].sort((a, b) => a.localeCompare(b)));
   const EMAIL_RE = /^(?:[A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]+)*)@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z]{2,}$/;
   const emailValid = $derived(EMAIL_RE.test(email.trim()));
 
@@ -27,7 +30,7 @@
     e.preventDefault();
     if (!emailValid) return;
     status = "sending";
-    const payload = { name, email, candidate, state, jurisdiction, office, party, partyOther, endorsements, budget, website, needs, details, _subject: "Campaign intake" };
+    const payload = { name, email, phone, candidate, state, jurisdiction, office, party, partyOther, endorsements, budget, website, needs, details, _subject: "Campaign intake" };
     try {
       const res = await fetch(FORMSPREE, {
         method: "POST",
@@ -53,6 +56,9 @@
   <div class="row">
     <div class="col col-12 col-6"><label>Candidate name <input bind:value={candidate} required /></label></div>
     <div class="col col-12 col-6"><label>Campaign website <input type="url" bind:value={website} placeholder="https://..." /></label></div>
+  </div>
+  <div class="row">
+    <div class="col col-12 col-6"><label>Phone <input type="tel" inputmode="tel" placeholder="(555) 555-5555" bind:value={phone} /></label></div>
   </div>
   <div class="row">
     <div class="col col-12 col-6"><label>Campaign state
@@ -87,11 +93,19 @@
 
   <fieldset class="group">
     <legend>What do you need help with?</legend>
-    <input class="search" type="search" placeholder="Search areas" on:input={(e) => filter = e.currentTarget.value.toLowerCase()} />
-    {#if filter && SKILL_OPTIONS.filter(s => s.toLowerCase().includes(filter) && !needs.includes(s)).length}
+    <div class="selector">
+      <button type="button" class="toggle" on:click={() => needsOpen = !needsOpen} aria-expanded={needsOpen}>
+        Select areas
+        <span class="arrow" data-open={needsOpen}>▾</span>
+      </button>
+      <input class="search" type="search" placeholder="Search areas" on:input={(e) => filter = e.currentTarget.value.toLowerCase()} />
+    </div>
+    {#if (needsOpen || filter) && sortedSkills.filter(s => (!filter || s.toLowerCase().includes(filter)) && !needs.includes(s)).length}
       <div class="results">
-        {#each SKILL_OPTIONS.filter(s => s.toLowerCase().includes(filter) && !needs.includes(s)) as s}
-          <button type="button" class="result" on:click={() => { needs = [...needs, s]; filter = ""; }}>{s}</button>
+        {#each sortedSkills.filter(s => (!filter || s.toLowerCase().includes(filter)) && !needs.includes(s)) as s}
+          <button type="button" class="result" on:click={() => { needs = [...needs, s]; }}>
+            {s}
+          </button>
         {/each}
       </div>
     {/if}
@@ -128,6 +142,9 @@
   input.invalid { border-color: #c53a2d; }
   fieldset.group { border: none; padding: 0; margin: 2px 0 0; }
   fieldset.group > legend { font-weight: 600; color: var(--color-primary); margin-bottom: 6px; }
+  .selector { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+  .toggle { justify-self: start; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text); padding: 6px 10px; border-radius: 8px; cursor: pointer; }
+  .arrow[data-open="true"] { transform: rotate(180deg); }
   .search { margin-bottom: 8px; }
   .results { display: grid; gap: 6px; max-height: 180px; overflow: auto; border: 1px solid var(--color-border); border-radius: 8px; padding: 6px; background: var(--color-surface); }
   .result { text-align: left; border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text); padding: 6px 10px; border-radius: 8px; cursor: pointer; }

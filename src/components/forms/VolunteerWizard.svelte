@@ -3,6 +3,7 @@
   const FORMSPREE = "https://formspree.io/f/xblkedka";
   let name = $state("");
   let email = $state("");
+  let phone = $state("");
   let profile = $state("");
   let skills = $state([]);
   let notes = $state("");
@@ -14,6 +15,8 @@
   let availability = $state(new Set());
   let weeklyHours = $state("");
   let filter = $state("");
+  let skillsOpen = $state(false);
+  const sortedSkills = $derived([...SKILL_OPTIONS].sort((a, b) => a.localeCompare(b)));
 
   const EMAIL_RE = /^(?:[A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]+)*)@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z]{2,}$/;
   const emailValid = $derived(EMAIL_RE.test(email.trim()));
@@ -51,6 +54,9 @@
     <div class="col col-12 col-6"><label>Full Name <input bind:value={name} required /></label></div>
     <div class="col col-12 col-6"><label>Email <input type="email" bind:value={email} class:invalid={!emailValid && email.length>0} aria-invalid={!emailValid && email.length>0} required /></label></div>
   </div>
+  <div class="row">
+    <div class="col col-12 col-6"><label>Phone <input type="tel" inputmode="tel" placeholder="(555) 555-5555" bind:value={phone} /></label></div>
+  </div>
   {#if !emailValid && email.length>0}
     <p class="err">Enter a valid email address.</p>
   {/if}
@@ -72,20 +78,31 @@
 
   <fieldset class="group">
     <legend>Location preference</legend>
-    <div class="chips">
+    <div class="options">
       {#each ["Remote","In person"] as opt}
-        <button type="button" role="checkbox" aria-checked={locationPref.has(opt)} class:active={locationPref.has(opt)} on:click={() => locationPref = toggleSet(locationPref, opt)}>{opt}</button>
+        <label class="check">
+          <input type="checkbox" checked={locationPref.has(opt)} on:change={() => locationPref = toggleSet(locationPref, opt)} />
+          <span>{opt}</span>
+        </label>
       {/each}
     </div>
   </fieldset>
 
   <fieldset class="group">
     <legend>Skills (select all that apply)</legend>
-    <input class="search" type="search" placeholder="Search skills" on:input={(e) => filter = e.currentTarget.value.toLowerCase()} />
-    {#if filter && SKILL_OPTIONS.filter(s => s.toLowerCase().includes(filter) && !skills.includes(s)).length}
+    <div class="selector">
+      <button type="button" class="toggle" on:click={() => skillsOpen = !skillsOpen} aria-expanded={skillsOpen}>
+        Select skills
+        <span class="arrow" data-open={skillsOpen}>▾</span>
+      </button>
+      <input class="search" type="search" placeholder="Search skills" on:input={(e) => filter = e.currentTarget.value.toLowerCase()} />
+    </div>
+    {#if (skillsOpen || filter) && sortedSkills.filter(s => (!filter || s.toLowerCase().includes(filter)) && !skills.includes(s)).length}
       <div class="results">
-        {#each SKILL_OPTIONS.filter(s => s.toLowerCase().includes(filter) && !skills.includes(s)) as s}
-          <button type="button" class="result" on:click={() => { skills = [...skills, s]; filter = ""; }}>{s}</button>
+        {#each sortedSkills.filter(s => (!filter || s.toLowerCase().includes(filter)) && !skills.includes(s)) as s}
+          <button type="button" class="result" on:click={() => { skills = [...skills, s]; }}>
+            {s}
+          </button>
         {/each}
       </div>
     {/if}
@@ -100,9 +117,12 @@
 
   <fieldset class="group">
     <legend>Availability</legend>
-    <div class="chips">
+    <div class="options">
       {#each ["Morning","Lunch","Afternoon","Evening","Night"] as slot}
-        <button type="button" role="checkbox" aria-checked={availability.has(slot)} class:active={availability.has(slot)} on:click={() => availability = toggleSet(availability, slot)}>{slot}</button>
+        <label class="check">
+          <input type="checkbox" checked={availability.has(slot)} on:change={() => availability = toggleSet(availability, slot)} />
+          <span>{slot}</span>
+        </label>
       {/each}
     </div>
   </fieldset>
@@ -135,6 +155,12 @@
   input.invalid { border-color: #c53a2d; }
   fieldset.group { border: none; padding: 0; margin: 2px 0 0; }
   fieldset.group > legend { font-weight: 600; color: var(--color-primary); margin-bottom: 6px; }
+  .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; }
+  .check { display: inline-flex; align-items: center; gap: 8px; padding: 6px 8px; border: 1px solid var(--color-border); border-radius: 8px; background: var(--color-surface); }
+  .check input { accent-color: var(--color-primary); }
+  .selector { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+  .toggle { justify-self: start; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text); padding: 6px 10px; border-radius: 8px; cursor: pointer; }
+  .arrow[data-open="true"] { transform: rotate(180deg); }
   .search { margin-bottom: 8px; }
   .results { display: grid; gap: 6px; max-height: 180px; overflow: auto; border: 1px solid var(--color-border); border-radius: 8px; padding: 6px; background: var(--color-surface); }
   .result { text-align: left; border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text); padding: 6px 10px; border-radius: 8px; cursor: pointer; }

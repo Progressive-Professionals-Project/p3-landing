@@ -9,6 +9,7 @@
   import { activeModal } from "$lib/ui";
   import { page } from "$app/stores";
   import { assets } from "$app/paths";
+  import { dev } from "$app/environment";
 
   
 </script>
@@ -54,6 +55,12 @@
       "foundingLocation": "Chicago, IL"
     }
   </script>
+
+  {#if !dev && $page.url.hostname !== 'localhost' && $page.url.hostname !== '127.0.0.1'}
+    <!-- Fathom - beautiful, simple website analytics -->
+    <script src="https://cdn.usefathom.com/script.js" data-site="COBMZPGQ" defer></script>
+    <!-- / Fathom -->
+  {/if}
 </svelte:head>
 
 <Header />
