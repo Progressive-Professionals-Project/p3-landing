@@ -55,6 +55,7 @@
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
   }
   :global(.container) { width: 100%; max-width: 1140px; margin-inline: auto; padding-inline: 16px; }
   :global(.container-sm) { max-width: 720px; }
@@ -68,6 +69,7 @@
 
   main {
     flex: 1 0 auto;
+    overflow-x: hidden;
     background:
       radial-gradient(1200px 600px at 10% -10%, hsl(210 100% 96%) 0%, transparent 60%),
       radial-gradient(900px 500px at 90% -10%, hsl(215 100% 94%) 0%, transparent 50%),
