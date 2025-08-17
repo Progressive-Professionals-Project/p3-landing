@@ -7,12 +7,53 @@
   import VolunteerWizard from "$components/forms/VolunteerWizard.svelte";
   import CampaignWizard from "$components/forms/CampaignWizard.svelte";
   import { activeModal } from "$lib/ui";
+  import { page } from "$app/stores";
+  import { assets } from "$app/paths";
 
   
 </script>
 
 <svelte:head>
+  <!-- Primary Meta -->
+  <title>Progressive Professionals Project — Volunteer experts for local and state campaigns</title>
   <meta name="description" content="We connect volunteer professionals in cybersecurity, web, IT, data and marketing with local and state campaigns. Fast, secure, expert help for progressive campaigns—everywhere." />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href={$page.url.href} />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Progressive Professionals Project — Volunteer experts for local and state campaigns" />
+  <meta property="og:description" content="We connect volunteer professionals with local and state campaigns. Secure, effective, and fast support from experienced volunteers." />
+  <meta property="og:url" content={$page.url.href} />
+  <meta property="og:site_name" content="Progressive Professionals Project" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:image" content={`${$page.url.origin}/images/logo.png`} />
+  <meta property="og:image:alt" content="Progressive Professionals Project" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Progressive Professionals Project — Volunteer experts for local and state campaigns" />
+  <meta name="twitter:description" content="We connect volunteer professionals with local and state campaigns. Secure, effective, and fast support from experienced volunteers." />
+  <meta name="twitter:image" content={`${$page.url.origin}/images/logo.png`} />
+
+  <!-- Icons / PWA basics -->
+  <link rel="icon" type="image/png" href={`${assets}/icon.png`} />
+  <link rel="apple-touch-icon" href={`${assets}/icon.png`} />
+  <meta name="theme-color" content="#0a3d62" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Progressive Professionals Project",
+      "url": "https://progressiveprofessionalsproject.org/",
+      "logo": "https://progressiveprofessionalsproject.org/images/logo.png",
+      "description": "We connect volunteer professionals with local and state campaigns for secure, effective, and fast support.",
+      "areaServed": "US",
+      "foundingLocation": "Chicago, IL"
+    }
+  </script>
 </svelte:head>
 
 <Header />
