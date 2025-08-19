@@ -5,7 +5,7 @@
 
 <section class="hero">
   <div class="content">
-    <img class="logo big" src={`${assets}/logo.png`} alt="Progressive Professionals Project logo" />
+    <img class="logo big" src={`${assets}/logo.png`} alt="Progressive Professionals Project logo" width="934" height="306" decoding="async" />
     <h1>Progressive Professionals Project</h1>
     <p class="tagline">
       We mobilize experienced volunteers in cybersecurity, web development, IT,

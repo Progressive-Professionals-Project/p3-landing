@@ -11,32 +11,34 @@
 
 <header class="site-header">
   <a href={`${base}/`} class="brand" aria-label="Progressive Professionals Project home">
-    <img src={`${assets}/logo.png`} alt="Progressive Professionals Project logo" />
+    <img src={`${assets}/logo.png`} alt="Progressive Professionals Project logo" width="934" height="306" decoding="async" fetchpriority="high" />
   </a>
-  <button class="menu-btn" aria-label="Menu" aria-controls="primary-nav" aria-expanded={menuOpen} on:click={toggleMenu}>
+  <button class="menu-btn" type="button" aria-label="Menu" aria-controls="primary-nav" aria-expanded={menuOpen} on:click|stopPropagation={toggleMenu} on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && toggleMenu()}>
     ☰
   </button>
-  <nav id="primary-nav" data-open={menuOpen}
-    on:click={closeMenu}
-  >
-    <a href={`${base}/`} aria-current={current === "/" ? "page" : undefined}>Home</a>
-    <button class="linklike" on:click={() => activeModal.set("volunteer")}>Volunteer</button>
-    <button class="linklike" on:click={() => activeModal.set("campaign")}>Get Help</button>
-    <button class="linklike" on:click={() => activeModal.set("contact")}>Contact</button>
+  <nav id="primary-nav" data-open={menuOpen} class:open={menuOpen} aria-hidden={!menuOpen}>
+    <a href={`${base}/`} aria-current={current === "/" ? "page" : undefined} on:click={() => (menuOpen = false)}>Home</a>
+    <button class="linklike" on:click={() => { activeModal.set("volunteer"); menuOpen = false; }}>Volunteer</button>
+    <button class="linklike" on:click={() => { activeModal.set("campaign"); menuOpen = false; }}>Get Help</button>
+    <button class="linklike" on:click={() => { activeModal.set("contact"); menuOpen = false; }}>Contact</button>
   </nav>
 </header>
 
 <style>
   .site-header {
+    --header-height: 80px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
     padding: 16px 20px;
+    min-height: var(--header-height);
     background: var(--color-primary);
     color: var(--color-primary-contrast);
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 10;
   }
   .brand {
@@ -57,6 +59,7 @@
     .brand img {
       height: 40px;
     }
+    .site-header { --header-height: 72px; }
   }
   nav {
     display: inline-flex;
@@ -95,18 +98,33 @@
   @media (max-width: 768px) {
     .menu-btn { display: inline-flex; align-items: center; justify-content: center; }
     nav {
-      position: absolute;
+      position: fixed;
       left: 0;
       right: 0;
-      top: 100%;
+      top: var(--header-height);
+      max-height: calc(100dvh - var(--header-height));
+      z-index: 100;
       background: var(--color-primary);
-      padding: 8px 12px 12px;
-      display: none;
+      padding: 12px 16px 16px;
+      display: flex;
       flex-direction: column;
-      gap: 8px;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+      overflow: auto;
       border-bottom: 1px solid color-mix(in oklab, var(--color-link-on-primary), transparent 70%);
+      transform-origin: top;
+      transform: translateY(-8px) scaleY(0.9);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 180ms ease, opacity 180ms ease;
     }
-    nav[data-open="true"] { display: flex; }
+    nav[data-open="true"], nav.open {
+      display: block;
+      transform: none;
+      opacity: 1;
+      pointer-events: auto;
+    }
   }
 </style>
 
